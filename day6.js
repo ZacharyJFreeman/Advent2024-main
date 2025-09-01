@@ -98,4 +98,4 @@ function guardTravel(directionToTest) {
                 }
         }
 
-console.log(dataArray)
+console.log(total)

@@ -22,7 +22,7 @@ let testingNextPosition = ""
 total = 0
 
 try {
-  const data = fs.readFileSync('day6_data.txt', 'utf8');
+  const data = fs.readFileSync('day6_p2_data.txt', 'utf8');
   
     let text = data
     // text = text.replace(/ /g,"")
@@ -98,4 +98,4 @@ function guardTravel(directionToTest) {
                 }
         }
 
-console.log(dataArray)
+console.log(total)
