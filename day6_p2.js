@@ -14,6 +14,8 @@ left = [0 , -1]
 findDirection = [upString, rightString, downString, leftString]
 movementDirection = [up , right, down, left]
 currentDirection = 0
+guardRow = 0
+guardColumn = 0
 currentRow = 0
 currentColumn = 0
 finalArray = []
@@ -42,7 +44,9 @@ function findGuard() {
                 if (dataArray[row][column] === findDirection[direction]) {
                     console.log(`Guard found at row = ${row} and column = ${column} and the direction is ${direction}`)
                     currentDirection = direction
+                    guardRow = row
                     currentRow = row
+                    guardColumn = column
                     currentColumn = column
                     dataArray[row][column] = "X"
                     break
@@ -53,7 +57,7 @@ function findGuard() {
     
 }
 
-function guardTravel(directionToTest) {
+function guardTravel(arrayToCheck) {
 
     if (currentRow + movementDirection[currentDirection][0] > dataArray.length-1 || currentRow + movementDirection[currentDirection][0] < 0) {
         return escaped = "true"
@@ -84,10 +88,17 @@ function guardTravel(directionToTest) {
 
     findGuard()
 
-    while (escaped === "false") {
-        guardTravel()
-        
-    }
+    // add obstacle at [row][column]
+    // continue if exits
+    // break and increment if [currentRow][currentColumn] = [guardRow][guardColumn]
+for (let row = 0; row < dataArray.length; row++) {
+        for (let column = 0; column < dataArray.length; column++) {
+           let tempArray = dataArray
+           tempArray[row][column] = "#"
+           guardTravel(tempArray)
+            }
+        }
+
 
 
     for (let row = 0; row < dataArray.length; row++) {
