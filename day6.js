@@ -1,6 +1,4 @@
 var fs = require('fs');
-const { uptime } = require('process');
-const { escape } = require('querystring');
 let dataArray = []
 total = 0
 upString = "^"
