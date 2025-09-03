@@ -22,6 +22,7 @@ finalArray = []
 escaped = "false"
 let testingNextPosition = ""
 total = 0
+direction = 0
 
 try {
   const data = fs.readFileSync('day6_p2_data.txt', 'utf8');
@@ -48,7 +49,6 @@ function findGuard() {
                     currentRow = row
                     guardColumn = column
                     currentColumn = column
-                    dataArray[row][column] = "X"
                     break
                     }
                 }
@@ -56,57 +56,59 @@ function findGuard() {
         }
     
 }
+function guardTravel(array) {
+    let state = `${tempRow},${tempColumn},${currentDirection}`;
+    if (visited.has(state)) {
+        total++
+        return escaped = "loop"
+    }
+    visited.add(state);
 
-function guardTravel(arrayToCheck) {
-
-    if (currentRow + movementDirection[currentDirection][0] > dataArray.length-1 || currentRow + movementDirection[currentDirection][0] < 0) {
+    if (tempRow + movementDirection[currentDirection][0] > dataArray.length-1 || tempRow + movementDirection[currentDirection][0] < 0) {
         return escaped = "true"
     }
     
-    if (currentColumn + movementDirection[currentDirection][1] > dataArray[0].length-1 || currentColumn + movementDirection[currentDirection][1] < 0) {
+    if (tempColumn + movementDirection[currentDirection][1] > dataArray[0].length-1 || tempColumn + movementDirection[currentDirection][1] < 0) {
         return escaped = "true"
     }
-    // console.log(`dataArray[currentRow + movementDirection[currentDirection][0]][currentColumn + movementDirection[currentDirection][1] = ${dataArray[currentRow + movementDirection[currentDirection][0]][currentColumn + movementDirection[currentDirection][1]]}`)
-    testingNextPosition = dataArray[currentRow + movementDirection[currentDirection][0]][currentColumn + movementDirection[currentDirection][1]]
+
+    testingNextPosition = array[tempRow + movementDirection[currentDirection][0]][tempColumn + movementDirection[currentDirection][1]]
 
     if (testingNextPosition === "#") {
-        // console.log(`current value of testingNextPosition = ${testingNextPosition}`)
         if (currentDirection === 3) {
             currentDirection = 0
         } else {
             currentDirection = currentDirection + 1
         }
-        dataArray[currentRow + movementDirection[currentDirection][0]][currentColumn + movementDirection[currentDirection][1]] = "X"      
     } else {
-        // console.log(`testing next position = ${testingNextPosition} currentRow = ${currentRow} + ${movementDirection[currentDirection][0]} currentColumn = ${currentColumn} + ${movementDirection[currentDirection][1]}`)
-        dataArray[currentRow + movementDirection[currentDirection][0]][currentColumn + movementDirection[currentDirection][1]] = "X"
-        currentRow = currentRow + movementDirection[currentDirection][0]
-        currentColumn = currentColumn + movementDirection[currentDirection][1]
+        tempRow = tempRow + movementDirection[currentDirection][0]
+        tempColumn = tempColumn + movementDirection[currentDirection][1]
     }
-    
 }
 
-    findGuard()
+findGuard()
 
-    // add obstacle at [row][column]
-    // continue if exits
-    // break and increment if [currentRow][currentColumn] = [guardRow][guardColumn]
 for (let row = 0; row < dataArray.length; row++) {
-        for (let column = 0; column < dataArray.length; column++) {
-           let tempArray = dataArray
-           tempArray[row][column] = "#"
-           guardTravel(tempArray)
+    for (let column = 0; column < dataArray.length; column++) {
+        let tempArray = dataArray.map(inner => [...inner]);
+        if (tempArray[row][column] === "#") {
+            continue
+        } else if (tempArray[row][column] === ".") {
+            tempArray[row][column] = "#"
+            currentDirection = direction
+            testingNextPosition = ""
+            escaped = "false"
+            tempRow = guardRow
+            tempColumn = guardColumn
+          
+            visited = new Set();
+
+            while (escaped === "false") {
+                guardTravel(tempArray)
+                continue
             }
         }
-
-
-
-    for (let row = 0; row < dataArray.length; row++) {
-        for (let column = 0; column < dataArray.length; column++) {
-                if (dataArray[row][column] === "X") {
-                    total++
-                    }
-                }
-        }
+    }
+}
 
 console.log(total)
