@@ -28,13 +28,14 @@ for (let row = 0; row < height; row++) {
   }
 }
 
-function checkDistance(row, col, visited9s = new Set()) {
+function checkDistance(row, col) {
   const val = Number(dataArray[row][col]);
 
   if (val === 9) {
-    visited9s.add(`${row},${col}`);
-    return visited9s;
+    return 1; // one complete path found
   }
+
+  let paths = 0;
 
   for (let [dx, dy] of directions) {
     const newRow = row + dy;
@@ -45,17 +46,17 @@ function checkDistance(row, col, visited9s = new Set()) {
 
     const nextVal = Number(dataArray[newRow][newCol]);
     if (nextVal === val + 1) {
-      checkDistance(newRow, newCol, visited9s);
+      paths += checkDistance(newRow, newCol);
     }
   }
 
-  return visited9s;
+  return paths;
 }
 
 hikeStartValues.forEach(start => {
   let [row, col] = start.split(',').map(Number);
-  let reachable9s = checkDistance(row, col, new Set());
-  totalFound += reachable9s.size;
+  let score = checkDistance(row, col);
+  totalFound += score;
 });
 
 console.log(totalFound);
